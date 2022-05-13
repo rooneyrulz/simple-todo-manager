@@ -1,0 +1,21 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  line-height: 1.5;
+  font-size: 1rem;
+  font-weight: 400;
+  font-family: Roboto;
+  overflow-x: hidden;
+}
+
+.container {
+  width: 80%;
+  margin-inline: auto;
+  text-align: center;
+}
