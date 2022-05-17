@@ -3,7 +3,6 @@ import types from "redux/actions/types";
 export interface ITodo {
   _id?: string;
   title: string;
-  active?: boolean;
   checked?: boolean;
   expires?: any;
   created_at?: any;

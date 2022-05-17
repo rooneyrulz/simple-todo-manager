@@ -31,7 +31,7 @@ const AddTodo: React.FC = (): JSX.Element => {
     expires: Date | null;
   }>({
     title: "",
-    expires: new Date("2022-05-20T21:11:54"),
+    expires: new Date(),
   });
 
   const handleChange = (
@@ -49,6 +49,7 @@ const AddTodo: React.FC = (): JSX.Element => {
       );
     } else {
       dispatch(addTodo(formData));
+      setFormData((state) => ({...state, title: "", expires: new Date()}))
     }
   };
 

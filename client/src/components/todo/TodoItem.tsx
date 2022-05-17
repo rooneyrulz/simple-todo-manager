@@ -37,7 +37,6 @@ const TodoItem: React.FC<Props> = ({ todo }): JSX.Element => {
       updateTodo(
         {
           title: todo.title,
-          active: todo.active,
           expires: todo.expires,
           checked: e.target.checked,
         },
@@ -58,7 +57,7 @@ const TodoItem: React.FC<Props> = ({ todo }): JSX.Element => {
         inputProps={{ "aria-label": "controlled" }}
       />
       <ListItemText primary={todo.title} />
-      <AccessTimeFilledIcon color={`${todo.active ? "success" : "inherit"}`} />
+      <AccessTimeFilledIcon color={`${new Date(todo.expires) > new Date() ? "success" : "inherit"}`} />
       <ListItemText primary={""} />
       <ListItemText primary={""} />
       <ListItemText primary={new Date(todo.expires)?.toUTCString()} />
