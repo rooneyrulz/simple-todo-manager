@@ -1,4 +1,5 @@
 import * as React from "react";
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { makeStyles } from "@material-ui/core/styles";
 import List from "@mui/material/List";
 
@@ -6,7 +7,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "redux/reducers";
 import { ITodo } from "redux/types/todo";
 
-import SortingSelect, { sortByDateASC } from "./SortingSelect";
+import SortingSelect from "./SortingSelect";
 import TodoItem from "./TodoItem";
 import AppLoader from "../AppLoader";
 
@@ -24,24 +25,51 @@ const Todo: React.FC = (): JSX.Element => {
 
   const setSortedData = (sortedData: ITodo[]) => setData(() => [...sortedData]);
 
+  const handleDragEnd = (result:any) => {
+    if(result.destination) {
+      console.log(result);
+      const items = [...data];
+      const [reorderedItem] = items?.splice(result.source.index, 1);
+      items?.splice(result.destination.index, 0, reorderedItem);
+      setData(items);
+    }
+  }
+
   React.useEffect(() => {
-    const sorted = sortByDateASC(todo.todos, "created_at");
-    setData(sorted);
+    setData(todo.todos);
   }, [todo.todos]);
 
   return (
-    <List className={classes.root}>
+    <div className={classes.root}>
       <SortingSelect data={data} setSortedData={setSortedData} />
-      {todo.loading ? (
-        <AppLoader />
-      ) : todo.todos?.length === 0 ? (
-        <p>No todos found!</p>
-      ) : (
-        data?.map((todo: ITodo) => {
-          return <TodoItem todo={todo} key={todo._id} />;
-        })
-      )}
-    </List>
+      <br />
+      <DragDropContext onDragEnd={handleDragEnd}>
+        <Droppable droppableId='todo'>
+          {(provided) => (
+            <List className="todo" {...provided.droppableProps} ref={provided.innerRef}>
+              {todo.loading ? (
+                <AppLoader />
+              ) : todo.todos?.length === 0 ? (
+                <p>No todos found!</p>
+              ) : (
+                data?.map((todo: ITodo, index) => {
+                  return (
+                    <Draggable key={todo._id} draggableId={index.toString()} index={index}>
+                      {(provided) => (
+                        <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
+                          <TodoItem todo={todo} />
+                        </div>
+                      )}
+                    </Draggable>
+                  );
+                })
+              )}
+              {provided.placeholder}
+            </List>
+          )}
+        </Droppable>
+      </DragDropContext>
+    </div>
   );
 };
 

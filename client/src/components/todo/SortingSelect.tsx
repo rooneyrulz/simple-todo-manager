@@ -6,7 +6,7 @@ import Select, { SelectChangeEvent } from "@mui/material/Select";
 
 import { ITodo } from "redux/types/todo";
 
-export const sortByDateASC = (arr: ITodo[], key: string): ITodo[] => {
+const sortByDateASC = (arr: ITodo[], key: string): ITodo[] => {
   return arr?.sort((a: any, b: any) => {
     var dateA = new Date(a[key]).getTime();
     var dateB = new Date(b[key]).getTime();

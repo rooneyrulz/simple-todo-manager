@@ -12,7 +12,7 @@ import { ITodo } from "redux/types/todo";
 
 type Props = {
   todo: ITodo;
-  key: string | number | undefined;
+  key?: string | number | undefined;
 };
 
 const useStyles = makeStyles((theme) => ({
@@ -45,9 +45,7 @@ const TodoItem: React.FC<Props> = ({ todo }): JSX.Element => {
     );
   };
 
-  const handleDelete = (id: string | undefined) => {
-    dispatch(deleteTodo(id));
-  };
+  const handleDelete = (id: string | undefined) =>  dispatch(deleteTodo(id));
 
   return (
     <ListItem className={classes.root}>

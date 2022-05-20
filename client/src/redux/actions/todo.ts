@@ -83,6 +83,7 @@ export const deleteTodo =
     try {
       await axios.delete(`${BASE_URI}/${id}`, config);
       dispatch({ type: types.DELETE_TODO, payload: id });
+      // dispatch<any>(getTodos())
       dispatch<any>(
         setAlert({
           msg: "Todo has been deleted!",
