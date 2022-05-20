@@ -3,8 +3,9 @@ import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { makeStyles } from "@material-ui/core/styles";
 import List from "@mui/material/List";
 
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "redux/reducers";
+import { reOrderTodos } from "redux/actions/todo";
 import { ITodo } from "redux/types/todo";
 
 import SortingSelect from "./SortingSelect";
@@ -20,20 +21,11 @@ const useStyles = makeStyles((theme) => ({
 
 const Todo: React.FC = (): JSX.Element => {
   const classes = useStyles();
-  const [data, setData] = React.useState<ITodo[]>([]);
+  const dispatch = useDispatch();
   const todo = useSelector((state: RootState) => state.todo);
+  const [data, setData] = React.useState<ITodo[]>([]);
 
   const setSortedData = (sortedData: ITodo[]) => setData(() => [...sortedData]);
-
-  const handleDragEnd = (result:any) => {
-    if(result.destination) {
-      console.log(result);
-      const items = [...data];
-      const [reorderedItem] = items?.splice(result.source.index, 1);
-      items?.splice(result.destination.index, 0, reorderedItem);
-      setData(items);
-    }
-  }
 
   React.useEffect(() => {
     setData(todo.todos);
@@ -43,10 +35,16 @@ const Todo: React.FC = (): JSX.Element => {
     <div className={classes.root}>
       <SortingSelect data={data} setSortedData={setSortedData} />
       <br />
-      <DragDropContext onDragEnd={handleDragEnd}>
+      <DragDropContext
+        onDragEnd={(result) => dispatch(reOrderTodos(data, result))}
+      >
         <Droppable droppableId='todo'>
           {(provided) => (
-            <List className="todo" {...provided.droppableProps} ref={provided.innerRef}>
+            <List
+              className='todo'
+              {...provided.droppableProps}
+              ref={provided.innerRef}
+            >
               {todo.loading ? (
                 <AppLoader />
               ) : todo.todos?.length === 0 ? (
@@ -54,9 +52,17 @@ const Todo: React.FC = (): JSX.Element => {
               ) : (
                 data?.map((todo: ITodo, index) => {
                   return (
-                    <Draggable key={todo._id} draggableId={index.toString()} index={index}>
+                    <Draggable
+                      key={todo._id}
+                      draggableId={index.toString()}
+                      index={index}
+                    >
                       {(provided) => (
-                        <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
+                        <div
+                          ref={provided.innerRef}
+                          {...provided.draggableProps}
+                          {...provided.dragHandleProps}
+                        >
                           <TodoItem todo={todo} />
                         </div>
                       )}

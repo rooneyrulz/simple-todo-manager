@@ -1,6 +1,7 @@
 import axios from "axios";
 import { Dispatch } from "redux";
 import { AppActions } from "redux/types";
+import { ITodo } from "redux/types/todo";
 import { setAlert } from "./alert";
 import types from "./types";
 
@@ -15,12 +16,23 @@ const config: any = {
 export const getTodos = () => async (dispatch: Dispatch<AppActions>) => {
   try {
     const { data } = await axios.get(BASE_URI, config);
-
     dispatch({ type: types.GET_TODO, payload: data });
   } catch (error) {
     console.log(error);
   }
 };
+
+// REORDER TODOS
+export const reOrderTodos =
+  (data: ITodo[], result: any) => (dispatch: Dispatch<AppActions>) => {
+    if (result.destination) {
+      console.log(result)
+      const items = [...data];
+      const [reorderedItem] = items?.splice(result.source.index, 1);
+      items?.splice(result.destination.index, 0, reorderedItem);
+      dispatch({ type: types.REORDER_TODO, payload: items });
+    }
+  };
 
 // ADD TODO
 export const addTodo =

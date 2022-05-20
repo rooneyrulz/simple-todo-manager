@@ -29,9 +29,14 @@ interface IUpdateTodo {
   payload: { id: string | undefined, data: ITodo };
 }
 
+interface IReOrderTodo {
+  type: typeof types.REORDER_TODO;
+  payload: ITodo[];
+}
+
 interface IDeleteTodo {
   type: typeof types.DELETE_TODO;
   payload: string | undefined;
 }
 
-export type TodoActions = IGetTodo | IAddTodo | IUpdateTodo | IDeleteTodo;
+export type TodoActions = IGetTodo | IAddTodo | IUpdateTodo | IReOrderTodo | IDeleteTodo;

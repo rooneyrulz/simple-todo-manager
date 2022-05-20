@@ -15,6 +15,12 @@ const todoReducer = (state = initialState, action: TodoActions): ITodoState => {
         todos: action.payload,
       };
 
+    case types.REORDER_TODO:
+      return {
+        ...state,
+        todos: action.payload,
+      };
+
     case types.ADD_TODO:
       return {
         ...state,
@@ -28,7 +34,7 @@ const todoReducer = (state = initialState, action: TodoActions): ITodoState => {
           todo._id === action.payload.id ? { ...action.payload.data } : todo
         ),
       };
-    
+
     case types.DELETE_TODO:
       return {
         ...state,
